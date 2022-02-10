@@ -3,7 +3,7 @@ from aiogram import types
 
 btn_my_neighbors = KeyboardButton("Мои соседи")
 btn_jkh = KeyboardButton("ЖКХ")
-btn_map_region = KeyboardButton("Карта района")
+btn_map_region = KeyboardButton("Карта района",  request_location=True)
 btn_neighbors_card = KeyboardButton("Карточки соседей")
 btn_my_card = KeyboardButton("Моя карточка")
 btn_edit_me = KeyboardButton("Редактировать о себе")

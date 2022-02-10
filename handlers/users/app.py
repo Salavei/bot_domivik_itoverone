@@ -70,14 +70,19 @@ async def send_privacy(message):
     await message.answer(f'{privacy}')
 
 
+
+
+
+
+
 @dp.message_handler(content_types=['text'])
 async def command_start_text(message: types.Message):
     data = {
         # Домовик
-        'Мои соседи': '',
+        'Мои соседи': give_neighbors_card,
         'ЖКХ': give_all_jkh,
-        'Карта района': '',
-        'Карточки соседей': '',
+        'Карта района': geo,
+        'Карточки соседей': give_neighbors_card,
         'Моя карточка': give_my_card,
         'Вакансии': give_all_target_vacancy,
         'Редактировать о себе': start_domovik,

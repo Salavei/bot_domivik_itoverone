@@ -508,7 +508,6 @@ async def load_phone(message: types.Message, state: FSMContext):
         True: db.update_resume_my,
         False: db.add_resume
     }
-    print('какого хуя???', data)
     # TypeError: object sqlite3.Cursor can't be used in 'await' expression
     bool_db = bool(db.get_resume_my(message.from_user.id))
     await data_d[bool_db](data['name'], data['skills'], data['area_of_residence'],
@@ -534,7 +533,6 @@ async def write_feedback(message: types.Message, state: FSMContext):
     await state.finish()
 
 
-
 class FSMcar_sub_unit(StatesGroup):
     number_car = State()
 
@@ -546,10 +544,7 @@ async def start_car_sub_unit(message: types.Message):
 
 @dp.message_handler(state=FSMcar_sub_unit.number_car)
 async def write_feedback(message: types.Message, state: FSMContext):
-    # async with state.proxy() as data:
-    #     data['text'] = message.text
     if db.try_search_car_owner(message.text):
-        #тут бот шлет сообщение владельцу машины
         await bot.send_message(db.successful_search_car_owner(message.text)[0], text='Вы подперли машину')
         await message.answer(f'Написали владельцу автомобиля!!')
     else:

@@ -107,8 +107,6 @@ class SQLestate:
         """Проверяем, есть ли уже юзер в базе"""
         with self.connection:
             result = self.cursor.execute('SELECT * FROM `users` WHERE `tg_id` = ?', (tg_id,)).fetchall()
-            print(bool(len(result)))
-            print(result)
             return bool(len(result))
 
     def give_subscriber_card(self, tg_id):
@@ -118,6 +116,26 @@ class SQLestate:
         with self.connection:
             result = self.cursor.execute('SELECT * FROM `users` WHERE `tg_id` = ?', (tg_id,)).fetchall()
             return result
+
+    def take_my_cards(self, tg_id):
+        """
+
+        """
+        with self.connection:
+            result = self.cursor.execute('SELECT `street`, `number_house` FROM `users` WHERE `tg_id` = ?',
+                                         (tg_id,)).fetchone()
+            return result
+
+    def take_all_cards_neighbors(self, street, number_house):
+        """
+
+        """
+        idstart = int(number_house) + 3
+        idend = int(number_house) - 3
+        with self.connection:
+            return self.cursor.execute(
+                'SELECT * FROM `users` WHERE `street` = ? AND `number_house` <= ? OR `number_house` >= ?',
+                (street, idstart, idend,)).fetchall()
 
     def give_feedback(self, tg_id, user_text):
         """
@@ -132,7 +150,6 @@ class SQLestate:
 
     def successful_search_car_owner(self, owner_car):
         return self.cursor.execute('SELECT `tg_id` FROM `users` WHERE `car` = ?', (owner_car,)).fetchone()
-
 
     def subscriber_exists(self):
         """Проверяем, есть ли уже юзер в базе"""
@@ -222,7 +239,6 @@ class SQLestate:
     def add_announcements(self, type_of_services, job_title, job_description, salary, phone, user_id, allow=False,
                           allow_admin=False):
         with self.connection:
-            print(phone)
             return self.cursor.execute(
                 "INSERT INTO `tg_my_announcements` (`type_of_services`,`job_title`,`job_description`,"
                 "`salary`,`phone`,`allow`, `date_time`, `user_id_id`, `allow_admin`) VALUES(?,?,?,?,?,?,?,?,?)",
