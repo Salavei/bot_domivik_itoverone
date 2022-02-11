@@ -19,6 +19,7 @@ async def requests_an_user_rent(call: types.CallbackQuery):
                         name_request=db.take_my_info(call.from_user.id)[0])
     await call.message.answer(text="Заявка отправлена")
 
+
 ###Пользователь активирует и деактивирует объявления
 @dp.callback_query_handler(lambda call: 'rent_stop_start_an_' in call.data)
 async def stop_start_an_rent_user(call: types.CallbackQuery):

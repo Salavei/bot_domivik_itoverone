@@ -45,16 +45,15 @@ btn_sell = KeyboardButton("Продается")
 btn_requisition_buy = KeyboardButton("Заявки на покупку")
 btn_back = KeyboardButton("🔙")
 
-
-
 keyboard_rule_konfendentsialnost = types.ReplyKeyboardMarkup(resize_keyboard=True)
 keyboard_rule_konfendentsialnost.add(btn_konfendentsialnost, btn_rule, btn_term, btn_dell_up, btn_back)
 
 keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
-keyboard.add(btn_back, btn_rule_konfendentsialnosts, btn_is_given, btn_my_sell, btn_my_rent, btn_requisition_arend, btn_sell,
+keyboard.add(btn_back, btn_rule_konfendentsialnosts, btn_is_given, btn_my_sell, btn_my_rent, btn_requisition_arend,
+             btn_sell,
              btn_requisition_buy)
 
-#admin button
+# admin button
 admin_resume = KeyboardButton('Объявления для Верификации')
 admin_announcement = KeyboardButton('Резюме для Верификации')
 btn_confirming_sell = KeyboardButton("Подтверждение Продажи")
@@ -63,4 +62,3 @@ btn_feedback_adm = KeyboardButton("Обратная связь")
 
 keyboard_admin = types.ReplyKeyboardMarkup(resize_keyboard=True)
 keyboard_admin.add(btn_confirming_sell, btn_confirming_arend, admin_resume, admin_announcement, btn_feedback_adm)
-

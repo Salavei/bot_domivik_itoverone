@@ -1,9 +1,8 @@
 from aiogram.types import KeyboardButton
 from aiogram import types
 
-
 btn_jkh = KeyboardButton("ЖКХ")
-btn_map_region = KeyboardButton("Карта района",  request_location=True)
+btn_map_region = KeyboardButton("Карта района", request_location=True)
 btn_neighbors_card = KeyboardButton("Карточки соседей")
 btn_my_card = KeyboardButton("Моя карточка")
 btn_edit_me = KeyboardButton("Редактировать о себе")
@@ -22,7 +21,6 @@ btn_go_vacancy = KeyboardButton("Вакансии")
 
 keyboard_offers = types.ReplyKeyboardMarkup(resize_keyboard=True)
 keyboard_offers.add(btn_back, btn_go_house, btn_go_vacancy)
-
 
 btn_laws_jkh = KeyboardButton("Законы")
 btn_schedule_jkh = KeyboardButton("Расписание уборок")

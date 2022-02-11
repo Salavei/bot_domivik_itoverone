@@ -3,6 +3,7 @@ import logging
 import environ
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from utils.db_api.db import SQLestate
+
 env = environ.Env()
 environ.Env.read_env()
 
@@ -19,5 +20,6 @@ if __name__ == '__main__':
     from handlers.users.app import dp
     from fsm.fsm import dp
     from handlers.callback.callback_handler import dp
+
     print('Start bot...')
     executor.start_polling(dp, skip_updates=True)

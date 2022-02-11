@@ -2,16 +2,13 @@ from main import *
 from aiogram.dispatcher.filters.builtin import CommandStart
 from utils.funk_async import *
 from filter.admin import IsAdmin
-from keyboards.default.markup_domovik import keyboard_main_domovik
-
-
 from utils.funk_async_domovik import *
 
 from utils.privacy import privacy
-
 from fsm.fsm import start_domovik, start_feedback, start_car_sub_unit, update_user_domovik
-#admin
 
+
+# admin
 
 
 @dp.message_handler(commands=['admin'])
@@ -22,14 +19,13 @@ async def command_start(message: types.Message):
             await message.answer('⚠️ Вход в админ режим ⚠️', reply_markup=keyboard_admin)
         else:
             db.get_admin(message.from_user.id, False)
-            await message.answer('❌ Выход из админ режима ❌', reply_markup=keyboard)
+            await message.answer('❌ Выход из админ режима ❌', reply_markup=keyboard_main_domovik)
     else:
         db.get_admin(message.from_user.id, False)
-        await message.answer('❌ Вы не админ, команда не будет работать ❌', reply_markup=keyboard)
+        await message.answer('❌ Вы не админ, команда не будет работать ❌', reply_markup=keyboard_main_domovik)
 
 
-
-#ОБьявления для апрува от админа
+# ОБьявления для апрува от админа
 
 async def get_all_announcement_for_adm(message: types.Message):
     if not db.get_announcement_for_adm():
@@ -37,8 +33,10 @@ async def get_all_announcement_for_adm(message: types.Message):
     else:
         for unp in db.get_announcement_for_adm():
             id, type_of_services, job_title, job_description, salary, phone, allow, _, _, _ = unp
-            await message.answer(f"Тип: {type_of_services}\nНазвание вакансии: {job_title}\nОписание вакансии: {job_description}\n💰 Заработная Плата: {salary}\n☎️ Номер телефона: {phone}",
-                                   reply_markup=await get_confirm_announcement_admin(id))
+            await message.answer(
+                f"Тип: {type_of_services}\nНазвание вакансии: {job_title}\nОписание вакансии: {job_description}\n💰 Заработная Плата: {salary}\n☎️ Номер телефона: {phone}",
+                reply_markup=await get_confirm_announcement_admin(id))
+
 
 async def get_all_resume_for_adm(message: types.Message):
     if not db.get_resume_for_adm():
@@ -59,30 +57,26 @@ async def get_all_feedback_for_adm(message: types.Message):
             text = unp[0]
             await message.answer(
                 f"🪛 {text}\n")
-#end admin
+
+
+# end admin
 
 
 @dp.message_handler(CommandStart())
 async def bot_start(message: types.Message):
-    # print('ffff', not db.check_subscriber(message.from_user.id))
     if db.check_subscriber(message.from_user.id):
         await message.answer(f'🔙🔙', reply_markup=keyboard_main_domovik)
     else:
         await message.answer(f'Добро пожаловать , пройдите регистрацию!!')
-        # db.add_subscriber(message.from_user.id)
         await start_domovik(message)
 
 
 async def error(message: types.Message):
     await message.delete()
 
+
 async def send_privacy(message):
     await message.answer(f'{privacy}')
-
-
-
-
-
 
 
 @dp.message_handler(content_types=['text'])

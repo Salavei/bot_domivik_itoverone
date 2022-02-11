@@ -135,6 +135,7 @@ class SQLestate:
             result = self.cursor.execute('SELECT `street`, `number_house` FROM `users` WHERE `tg_id` = ?',
                                          (tg_id,)).fetchone()
             return result
+
     def take_my_info(self, tg_id):
         """
 
@@ -376,7 +377,7 @@ class SQLestate:
 
     def confirm_announcements_admin(self, id_conf: int) -> list:
         with self.connection:
-            return self.cursor.execute("SELECT `tg_my_announcements` SET `allow_admin` = ? WHERE `id` =?",
+            return self.cursor.execute("UPDATE `tg_my_announcements` SET `allow_admin` = ? WHERE `id` =?",
                                        (True, id_conf))
 
     def close(self):

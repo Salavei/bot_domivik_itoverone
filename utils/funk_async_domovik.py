@@ -1,8 +1,5 @@
-import types
-
-from main import db, bot
+from main import db
 from keyboards.default.markup import *
-from keyboards.inline.inline_keyboards import *
 from keyboards.default.markup_domovik import *
 
 from keyboards.default.markup import keyboard
@@ -48,3 +45,12 @@ async def all_laws_jkh(message: types.Message):
     await message.answer(
         f"Ссылка на портал о законах ЖКХ\nhttps://gkx.by/baza-znanij/normativno-pravovye-dokumenty/ofitsialnye-dokumenty")
 
+
+async def harvesting_schedule(message: types.Message):
+    await message.answer(
+        f"График уборки ЖКХ\nhttps://etalonline.by/novosti/korotko-o-vazhnom/grafik-uborki-podezdov-ustanovlen-v-belarusi/")
+
+
+async def news_jkh(message: types.Message):
+    await message.answer(
+        f"Информация от ЖКХ\nhttps://minsknews.by/tag/zhkh/")
