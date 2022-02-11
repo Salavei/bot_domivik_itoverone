@@ -59,7 +59,8 @@ admin_resume = KeyboardButton('Объявления для Верификаци�
 admin_announcement = KeyboardButton('Резюме для Верификации')
 btn_confirming_sell = KeyboardButton("Подтверждение Продажи")
 btn_confirming_arend = KeyboardButton("Подтверждение Аренды")
+btn_feedback_adm = KeyboardButton("Обратная связь")
 
 keyboard_admin = types.ReplyKeyboardMarkup(resize_keyboard=True)
-keyboard_admin.add(btn_confirming_sell, btn_confirming_arend, admin_resume, admin_announcement)
+keyboard_admin.add(btn_confirming_sell, btn_confirming_arend, admin_resume, admin_announcement, btn_feedback_adm)
 

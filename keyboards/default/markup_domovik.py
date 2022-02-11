@@ -1,7 +1,7 @@
 from aiogram.types import KeyboardButton
 from aiogram import types
 
-btn_my_neighbors = KeyboardButton("Мои соседи")
+
 btn_jkh = KeyboardButton("ЖКХ")
 btn_map_region = KeyboardButton("Карта района",  request_location=True)
 btn_neighbors_card = KeyboardButton("Карточки соседей")
@@ -11,7 +11,7 @@ btn_spravka = KeyboardButton("Справка")
 btn_offers_for_me = KeyboardButton("Предложения для меня")
 
 keyboard_main_domovik = types.ReplyKeyboardMarkup(resize_keyboard=True)
-keyboard_main_domovik.add(btn_my_neighbors, btn_jkh, btn_map_region, btn_neighbors_card, btn_my_card,
+keyboard_main_domovik.add(btn_jkh, btn_map_region, btn_neighbors_card, btn_my_card,
                           btn_edit_me, btn_spravka, btn_offers_for_me)
 
 # Кнопки предложения для меня с вакансиями

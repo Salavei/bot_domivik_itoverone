@@ -9,19 +9,19 @@ from keyboards.default.markup import keyboard
 
 
 async def give_all_target(message: types.Message):
-    await message.reply(text='Правила размещения и конфедициальность', reply_markup=keyboard_offers)
+    await message.reply(text='Все предложения для Вас', reply_markup=keyboard_offers)
 
 
 async def give_all_target_house(message: types.Message):
-    await message.reply(text='Правила размещения и конфедициальность', reply_markup=keyboard)
+    await message.reply(text='Предложения по недвижемости', reply_markup=keyboard)
 
 
 async def give_all_target_vacancy(message: types.Message):
-    await message.answer(f'Привет, быстрее начни мной пользоваться!', reply_markup=keyboard_vac)
+    await message.reply(f'Предложения по вакансиям', reply_markup=keyboard_vac)
 
 
 async def give_all_jkh(message: types.Message):
-    await message.reply(text='Правила размещения и конфедициальность', reply_markup=btn_go_jkh)
+    await message.reply(text='Раздел ЖКХ', reply_markup=btn_go_jkh)
 
 
 async def give_my_card(message: types.Message):
@@ -47,4 +47,4 @@ async def geo(message: types.Message):
 async def all_laws_jkh(message: types.Message):
     await message.answer(
         f"Ссылка на портал о законах ЖКХ\nhttps://gkx.by/baza-znanij/normativno-pravovye-dokumenty/ofitsialnye-dokumenty")
-# https://gkx.by/baza-znanij/normativno-pravovye-dokumenty/ofitsialnye-dokumenty
+

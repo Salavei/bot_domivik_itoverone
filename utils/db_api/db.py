@@ -45,12 +45,12 @@ class SQLestate:
                 "INSERT INTO `request_sell` (`id_an_sell`,`number_request`,`name_request`) VALUES(?,?,?)",
                 (id_an_sell, number_request, name_request))
 
-    def show_request_sell(self, id_an_rent):
+    def show_request_sell(self, id_tg):
         """показывает запрос продажи"""
         with self.connection:
             return self.cursor.execute(
                 "SELECT `number_request`, `name_request`,`id_an_sell` FROM `request_sell` WHERE `id_an_sell` IN (SELECT `id` FROM `announcements_sell` WHERE `tg_id` =? )",
-                (int(id_an_rent),)).fetchall()
+                (int(id_tg),)).fetchall()
 
     def show_request_rent(self, id_an_rent):
         """показывает запрос аренды"""
@@ -58,6 +58,16 @@ class SQLestate:
             return self.cursor.execute(
                 "SELECT `number_request`, `name_request`,`id_an_rent` FROM `request_rent` WHERE `id_an_rent` IN (SELECT `id` FROM `announcements_rent` WHERE `tg_id` =? )",
                 (int(id_an_rent),)).fetchall()
+
+    def show_requeat_announcements_rent(self, id_an):
+        """Показать все объявления по аренде"""
+        with self.connection:
+            return self.cursor.execute("SELECT * FROM `announcements_rent` WHERE `id` = ?", (id_an,)).fetchall()
+
+    def show_requeat_announcements_sell(self, id_an):
+        """Показать все объявления по аренде"""
+        with self.connection:
+            return self.cursor.execute("SELECT * FROM `announcements_sell` WHERE `id` = ?", (id_an,)).fetchall()
 
     def show_all_announcements_sell(self, ):
         """Показать все объявления по продаже"""
@@ -125,6 +135,14 @@ class SQLestate:
             result = self.cursor.execute('SELECT `street`, `number_house` FROM `users` WHERE `tg_id` = ?',
                                          (tg_id,)).fetchone()
             return result
+    def take_my_info(self, tg_id):
+        """
+
+        """
+        with self.connection:
+            result = self.cursor.execute('SELECT `first_name`, `number_phone` FROM `users` WHERE `tg_id` = ?',
+                                         (tg_id,)).fetchone()
+            return result
 
     def take_all_cards_neighbors(self, street, number_house):
         """
@@ -179,6 +197,16 @@ class SQLestate:
                     district,
                     number_house, street,
                     entrance, floor, apartment, number_phone, car))
+
+    def update_domovik_subscriber(self, tg_id, first_name, last_name, city, region, district, number_house, street,
+                                  entrance, floor, apartment, number_phone, car):
+        """Добавляем нового юзера"""
+        with self.connection:
+            return self.cursor.execute(
+                "UPDATE `users` SET `first_name`  =?, `last_name`  =?, `city`  =?, `region`  =?, `district`  =?, `number_house`  =?, `street`  =?, `entrance`  =?, `floor`  =?,  `apartment`  =?, `number_phone`  =?, `car`  =? WHERE `tg_id` =?"
+                ,
+                (first_name, last_name, city, region, district, number_house, street, entrance, floor, apartment,
+                 number_phone, car, tg_id))
 
     def confirm_announcements_sell_user(self, id_conf, allow):
         """Подтвердить объявление продажи как юзер"""
@@ -342,9 +370,13 @@ class SQLestate:
         with self.connection:
             return self.cursor.execute("UPDATE `tg_my_resume` SET `allow_admin` = ? WHERE `id` =?", (True, id_conf))
 
+    def show_all_feedback(self) -> list:
+        with self.connection:
+            return self.cursor.execute("SELECT `user_text` FROM `feedback`", ).fetchall()
+
     def confirm_announcements_admin(self, id_conf: int) -> list:
         with self.connection:
-            return self.cursor.execute("UPDATE `tg_my_announcements` SET `allow_admin` = ? WHERE `id` =?",
+            return self.cursor.execute("SELECT `tg_my_announcements` SET `allow_admin` = ? WHERE `id` =?",
                                        (True, id_conf))
 
     def close(self):

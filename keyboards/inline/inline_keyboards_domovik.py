@@ -7,7 +7,7 @@ async def keyboards_fsm_domovik_user() -> InlineKeyboardMarkup:
         row_width=1,
         inline_keyboard=[
             [
-                InlineKeyboardButton(f'Подтвверждаю', callback_data=f'pryve'),
+                InlineKeyboardButton(f'Подтверждаю', callback_data='Podtv'),
             ]
         ]
     )
@@ -20,7 +20,7 @@ async def keyboards_fsm_domovik_car() -> InlineKeyboardMarkup:
         row_width=2,
         inline_keyboard=[
             [
-                InlineKeyboardButton(f'Есть машина', callback_data=f'Yes_car'),
+                InlineKeyboardButton(f'Есть машина', callback_data=f'y_Yes_car'),
                 InlineKeyboardButton(f'Нет машины', callback_data=f'No_car'),
             ]
         ]

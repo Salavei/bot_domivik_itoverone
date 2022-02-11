@@ -9,7 +9,7 @@ from utils.funk_async_domovik import *
 
 from utils.privacy import privacy
 
-from fsm.fsm import start_domovik, start_feedback, start_car_sub_unit
+from fsm.fsm import start_domovik, start_feedback, start_car_sub_unit, update_user_domovik
 #admin
 
 
@@ -49,6 +49,16 @@ async def get_all_resume_for_adm(message: types.Message):
             await message.answer(
                 f"👤 Имя: {name}\n🪛 Навыки: {skills}\n🌍 Район проживания: {area_of_residence}\n☎️ Номер телефона: {phone}",
                 reply_markup=await get_confirm_admin_resume(id_resume))
+
+
+async def get_all_feedback_for_adm(message: types.Message):
+    if not db.show_all_feedback():
+        await message.answer(f'❌ Нет обратной связи ‼️')
+    else:
+        for unp in db.show_all_feedback():
+            text = unp[0]
+            await message.answer(
+                f"🪛 {text}\n")
 #end admin
 
 
@@ -85,7 +95,7 @@ async def command_start_text(message: types.Message):
         'Карточки соседей': give_neighbors_card,
         'Моя карточка': give_my_card,
         'Вакансии': give_all_target_vacancy,
-        'Редактировать о себе': start_domovik,
+        'Редактировать о себе': update_user_domovik,
         'Справка': start_feedback,
         'Недвижимость': give_all_target_house,
         'Предложения для меня': give_all_target,
@@ -119,6 +129,8 @@ async def command_start_text(message: types.Message):
         'Резюме для Верификации': get_all_resume_for_adm,
         'Подтверждение Продажи': confirmation_of_sales,
         'Подтверждение Аренды': confirmation_of_rent,
+        'Обратная связь': get_all_feedback_for_adm,
+
     }
     await data.get(message.text, error)(message)
     await data_admin.get(message.text, error)(message)

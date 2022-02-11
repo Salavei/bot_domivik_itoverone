@@ -1,14 +1,8 @@
-from aiogram import types
-from aiogram.dispatcher import FSMContext
-from aiogram.dispatcher.filters.state import State, StatesGroup
-from main import *
 import datetime
 from keyboards.inline.inline_keyboards import *
-from aiogram import types
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.state import State, StatesGroup
-from main import *
-
+from keyboards.inline.inline_keyboards_domovik import keyboards_fsm_domovik_user, keyboards_fsm_domovik_car
 from handlers.callback.callback_handler import *
 
 
@@ -269,6 +263,7 @@ class FSMdomovik(StatesGroup):
     floor = State()
     apartment = State()
     number_phone = State()
+    why_car = State()
     car = State()
 
     print('Start domovik')
@@ -276,15 +271,17 @@ class FSMdomovik(StatesGroup):
 
 async def start_domovik(message: types.Message):
     await FSMdomovik.confirm.set()
-    await message.answer('Подтвердите:')
+    await message.answer('Подтвердите согласие на обработку данных:', reply_markup=await keyboards_fsm_domovik_user())
 
 
-@dp.message_handler(state=FSMdomovik.confirm)
-async def name_write_state(message: types.Message, state: FSMContext):
+@dp.callback_query_handler(lambda c: c.data == 'Podtv', state=FSMdomovik.confirm)
+async def podtv_domovik(call: types.CallbackQuery, state: FSMContext):
+    # print(c.data)
+    await call.message.edit_text(text="☑️")
     async with state.proxy() as data:
-        data['confirm'] = message.text
+        data['confirm'] = True
     await FSMdomovik.next()
-    await message.answer('Введие Имя:')
+    await bot.send_message(chat_id=call.from_user.id, text='Введие Имя:')
 
 
 @dp.message_handler(state=FSMdomovik.first_name)
@@ -372,16 +369,34 @@ async def number_phone_write_state(message: types.Message, state: FSMContext):
     async with state.proxy() as data:
         data['number_phone'] = message.text
     await FSMdomovik.next()
-    await message.answer('Введите номер машины')
+    await message.answer('У вас есть машина??', reply_markup=await keyboards_fsm_domovik_car())
+
+
+@dp.callback_query_handler(lambda call: call.data == 'y_Yes_car', state=FSMdomovik.why_car)
+async def podtv_domovik_yes(call: types.CallbackQuery):
+    await call.message.edit_text(text="☑️")
+    await FSMdomovik.next()
+    await bot.send_message(chat_id=call.from_user.id, text='Напишите номер машины:')
 
 
 @dp.message_handler(state=FSMdomovik.car)
-async def car_write_state(message: types.Message, state: FSMContext):
+async def apr_podtv_domovik_yes(message: types.Message, state: FSMContext):
     async with state.proxy() as data:
         data['car'] = message.text
-    await message.answer('✅ Вы зарегестрировались')
-    print('message.from_user.id', message.from_user.id)
+    await message.answer(text='✅ Вы зарегестрировались')
     db.add_subscriber(message.from_user.id, data['confirm'], data['first_name'], data['last_name'], data['city'],
+                      data['region'], data['district'], data['number_house'], data['street'],
+                      data['entrance'], data['floor'], data['apartment'], data['number_phone'], data['car'])
+    await state.finish()
+
+
+@dp.callback_query_handler(lambda c: c.data == 'No_car', state=FSMdomovik.why_car)
+async def podtv_domovik_no(call: types.CallbackQuery, state: FSMContext):
+    await call.message.edit_text(text="☑️")
+    async with state.proxy() as data:
+        data['car'] = 'No_car'
+    await bot.send_message(chat_id=call.from_user.id, text='✅ Вы зарегестрировались')
+    db.add_subscriber(call.from_user.id, data['confirm'], data['first_name'], data['last_name'], data['city'],
                       data['region'], data['district'], data['number_house'], data['street'],
                       data['entrance'], data['floor'], data['apartment'], data['number_phone'], data['car'])
     await state.finish()
@@ -549,4 +564,145 @@ async def write_feedback(message: types.Message, state: FSMContext):
         await message.answer(f'Написали владельцу автомобиля!!')
     else:
         await message.answer('Машины не существует')
+    await state.finish()
+
+
+class FSMupdate_domovik(StatesGroup):
+    first_name = State()
+    last_name = State()
+    city = State()
+    region = State()
+    district = State()
+    number_house = State()
+    street = State()
+    entrance = State()
+    floor = State()
+    apartment = State()
+    number_phone = State()
+    why_car = State()
+    car = State()
+
+    print('Start domovik')
+
+
+async def update_user_domovik(message: types.Message):
+    await FSMupdate_domovik.first_name.set()
+    await message.answer(text='Введие Имя:')
+
+
+@dp.message_handler(state=FSMupdate_domovik.first_name)
+async def first_name_update_user_domovik(message: types.Message, state: FSMContext):
+    async with state.proxy() as data:
+        data['first_name'] = message.text
+    await FSMupdate_domovik.next()
+    await message.answer('Введите вашу фамилию:')
+
+
+@dp.message_handler(state=FSMupdate_domovik.last_name)
+async def last_name_update_user_domovik(message: types.Message, state: FSMContext):
+    async with state.proxy() as data:
+        data['last_name'] = message.text
+    await FSMupdate_domovik.next()
+    await message.answer('Введите вашу город:')
+
+
+@dp.message_handler(state=FSMupdate_domovik.city)
+async def city_update_user_domovik(message: types.Message, state: FSMContext):
+    async with state.proxy() as data:
+        data['city'] = message.text
+    await FSMupdate_domovik.next()
+    await message.answer('Введите вашу область:')
+
+
+@dp.message_handler(state=FSMupdate_domovik.region)
+async def region_update_user_domovik(message: types.Message, state: FSMContext):
+    async with state.proxy() as data:
+        data['region'] = message.text
+    await FSMupdate_domovik.next()
+    await message.answer('Введите ваш район:')
+
+
+@dp.message_handler(state=FSMupdate_domovik.district)
+async def district_update_user_domovik(message: types.Message, state: FSMContext):
+    async with state.proxy() as data:
+        data['district'] = message.text
+    await FSMupdate_domovik.next()
+    await message.answer('Введите номер дома:')
+
+
+@dp.message_handler(state=FSMupdate_domovik.number_house)
+async def number_house_update_user_domovik(message: types.Message, state: FSMContext):
+    async with state.proxy() as data:
+        data['number_house'] = message.text
+    await FSMupdate_domovik.next()
+    await message.answer('Введите название улицы:')
+
+
+@dp.message_handler(state=FSMupdate_domovik.street)
+async def street_update_user_domovik(message: types.Message, state: FSMContext):
+    async with state.proxy() as data:
+        data['street'] = message.text
+    await FSMupdate_domovik.next()
+    await message.answer('Введите ваш подъезд:')
+
+
+@dp.message_handler(state=FSMupdate_domovik.entrance)
+async def entrance_update_user_domovik(message: types.Message, state: FSMContext):
+    async with state.proxy() as data:
+        data['entrance'] = message.text
+    await FSMupdate_domovik.next()
+    await message.answer('Введите ваш этаж')
+
+
+@dp.message_handler(state=FSMupdate_domovik.floor)
+async def floor_update_user_domovik(message: types.Message, state: FSMContext):
+    async with state.proxy() as data:
+        data['floor'] = message.text
+    await FSMupdate_domovik.next()
+    await message.answer('Введите номер квартиры')
+
+
+@dp.message_handler(state=FSMupdate_domovik.apartment)
+async def apartment_update_user_domovik(message: types.Message, state: FSMContext):
+    async with state.proxy() as data:
+        data['apartment'] = message.text
+    await FSMupdate_domovik.next()
+    await message.answer('Введите номер телефона')
+
+
+@dp.message_handler(state=FSMupdate_domovik.number_phone)
+async def number_phone_update_user_domovik(message: types.Message, state: FSMContext):
+    async with state.proxy() as data:
+        data['number_phone'] = message.text
+    await FSMupdate_domovik.next()
+    await message.answer('У вас есть машина??', reply_markup=await keyboards_fsm_domovik_car())
+
+
+@dp.callback_query_handler(lambda call: call.data == 'y_Yes_car', state=FSMupdate_domovik.why_car)
+async def podtv_domovik_yes_update_user_domovik(call: types.CallbackQuery):
+    await call.message.edit_text(text="☑️")
+    await FSMupdate_domovik.next()
+    await bot.send_message(chat_id=call.from_user.id, text='Напишите номер машины:')
+
+
+@dp.message_handler(state=FSMupdate_domovik.car)
+async def apr_podtv_domovik_yes_update_user_domovik(message: types.Message, state: FSMContext):
+    async with state.proxy() as data:
+        data['car'] = message.text
+    await message.answer(text='✅ Вы обновили информацию о себе')
+    db.update_domovik_subscriber(message.from_user.id, data['first_name'], data['last_name'], data['city'],
+                                 data['region'], data['district'], data['number_house'], data['street'],
+                                 data['entrance'], data['floor'], data['apartment'], data['number_phone'], data['car'])
+    await state.finish()
+
+
+@dp.callback_query_handler(lambda c: c.data == 'No_car', state=FSMupdate_domovik.why_car)
+async def podtv_domovik_no_update_user_domovik(call: types.CallbackQuery, state: FSMContext):
+    await call.message.edit_text(text="☑️")
+    async with state.proxy() as data:
+        data['car'] = 'No_car'
+    await bot.send_message(chat_id=call.from_user.id, text='✅ Вы обновили информацию о себе')
+    db.update_domovik_subscriber(call.from_user.id, data['first_name'], data['last_name'], data['city'],
+                                 data['region'], data['district'], data['number_house'], data['street'],
+                                 data['entrance'], data['floor'], data['apartment'], data['number_phone'], data['car'])
     await state.finish()
